@@ -1,0 +1,14 @@
+{
+  "hash": "4a81c3b804bbf2f39445ea7782eec428fa529ac0b36ac0d4e799e7a6db1d83f6",
+  "prompts": [],
+  "consistency": {
+    "简体中文": {
+      "localLanguage": "简体中文",
+      "commitFix": "fix(server): rename port constant to uppercase PORT",
+      "commitFeat": "feat(server): support PORT environment variable",
+      "commitFixOmitScope": "fix: rename port constant to uppercase PORT",
+      "commitFeatOmitScope": "feat: support PORT environment variable",
+      "commitDescription": "修复端口常量命名规范并添加环境变量支持"
+    }
+  }
+}
