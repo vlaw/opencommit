@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.3.11-rc.1] - 2026-08-20
+
+Pre-release of 3.3.11, containing upstream v3.3.10 plus the fixes below. RC stage; install via `npm install opencommit@next`.
+
+### Changed
+
+- refactor: centralize model fetching and error formatting
+- refactor(setup): centralize provider metadata
+- refactor(commit): centralize git push arguments
+- refactor(cli): centralize forwarded argument filtering
+- docs: target pull requests at master
+
+### Fixed
+
+- use ASCII colon and space in zh_CN/zh_TW commit examples
+- fix(setup): use generic OpenAI model label
+- fix: prevent stalls while processing large diffs
+- fix: harden large diff processing
+
+[3.3.11-rc.1]: https://github.com/di-sukharev/opencommit/compare/v3.3.10...HEAD
+
 ## [3.3.10-rc.1] - 2026-07-07
 
 Pre-release of 3.3.10. RC stage; install via `npm install opencommit@next`.

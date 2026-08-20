@@ -65273,7 +65273,7 @@ function G3(t2, e3) {
 // package.json
 var package_default = {
   name: "opencommit",
-  version: "3.3.10",
+  version: "3.3.11-rc.1",
   description: "Auto-generate impressive commits in 1 second. Killing lame commits with AI \u{1F92F}\u{1F52B}",
   keywords: [
     "git",
@@ -65345,6 +65345,8 @@ var package_default = {
   },
   devDependencies: {
     "@biomejs/biome": "2.4.11",
+    "@commitlint/cli": "21.1.0",
+    "@commitlint/config-conventional": "21.1.0",
     "@commitlint/types": "^17.4.4",
     "@types/ini": "^1.3.31",
     "@types/inquirer": "^9.0.3",
@@ -65388,6 +65390,9 @@ var package_default = {
   overrides: {
     ajv: "^8.17.1",
     "whatwg-url": "^14.0.0"
+  },
+  allowScripts: {
+    "esbuild@0.25.5": true
   }
 };
 
@@ -67236,21 +67241,21 @@ var vi_VN_default = {
 // src/i18n/zh_CN.json
 var zh_CN_default = {
   localLanguage: "\u7B80\u4F53\u4E2D\u6587",
-  commitFix: "fix(server.ts)\uFF1A\u5C06\u7AEF\u53E3\u53D8\u91CF\u4ECE\u5C0F\u5199port\u6539\u4E3A\u5927\u5199PORT",
-  commitFeat: "feat(server.ts)\uFF1A\u6DFB\u52A0\u5BF9process.env.PORT\u73AF\u5883\u53D8\u91CF\u7684\u652F\u6301",
+  commitFix: "fix(server.ts): \u5C06\u7AEF\u53E3\u53D8\u91CF\u4ECE\u5C0F\u5199port\u6539\u4E3A\u5927\u5199PORT",
+  commitFeat: "feat(server.ts): \u6DFB\u52A0\u5BF9process.env.PORT\u73AF\u5883\u53D8\u91CF\u7684\u652F\u6301",
   commitDescription: "\u73B0\u5728\u7AEF\u53E3\u53D8\u91CF\u88AB\u547D\u540D\u4E3APORT\uFF0C\u8FD9\u63D0\u9AD8\u4E86\u547D\u540D\u7EA6\u5B9A\u7684\u4E00\u81F4\u6027\uFF0C\u56E0\u4E3APORT\u662F\u4E00\u4E2A\u5E38\u91CF\u3002\u73AF\u5883\u53D8\u91CF\u7684\u652F\u6301\u4F7F\u5E94\u7528\u7A0B\u5E8F\u66F4\u52A0\u7075\u6D3B\uFF0C\u56E0\u4E3A\u5B83\u73B0\u5728\u53EF\u4EE5\u901A\u8FC7process.env.PORT\u73AF\u5883\u53D8\u91CF\u5728\u4EFB\u4F55\u53EF\u7528\u7AEF\u53E3\u4E0A\u8FD0\u884C\u3002",
-  commitFixOmitScope: "fix\uFF1A\u5C06\u7AEF\u53E3\u53D8\u91CF\u4ECE\u5C0F\u5199port\u6539\u4E3A\u5927\u5199PORT",
-  commitFeatOmitScope: "feat\uFF1A\u6DFB\u52A0\u5BF9process.env.PORT\u73AF\u5883\u53D8\u91CF\u7684\u652F\u6301"
+  commitFixOmitScope: "fix: \u5C06\u7AEF\u53E3\u53D8\u91CF\u4ECE\u5C0F\u5199port\u6539\u4E3A\u5927\u5199PORT",
+  commitFeatOmitScope: "feat: \u6DFB\u52A0\u5BF9process.env.PORT\u73AF\u5883\u53D8\u91CF\u7684\u652F\u6301"
 };
 
 // src/i18n/zh_TW.json
 var zh_TW_default = {
   localLanguage: "\u7E41\u9AD4\u4E2D\u6587",
-  commitFix: "\u4FEE\u6B63(server.ts)\uFF1A\u5C07\u7AEF\u53E3\u8B8A\u6578\u5F9E\u5C0F\u5BEB\u7AEF\u53E3\u6539\u70BA\u5927\u5BEBPORT",
-  commitFeat: "\u529F\u80FD(server.ts)\uFF1A\u65B0\u589E\u5C0Dprocess.env.PORT\u74B0\u5883\u8B8A\u6578\u7684\u652F\u63F4",
+  commitFix: "\u4FEE\u6B63(server.ts): \u5C07\u7AEF\u53E3\u8B8A\u6578\u5F9E\u5C0F\u5BEB\u7AEF\u53E3\u6539\u70BA\u5927\u5BEBPORT",
+  commitFeat: "\u529F\u80FD(server.ts): \u65B0\u589E\u5C0Dprocess.env.PORT\u74B0\u5883\u8B8A\u6578\u7684\u652F\u63F4",
   commitDescription: "\u73FE\u5728port\u8B8A\u6578\u5DF2\u66F4\u540D\u70BAPORT\uFF0C\u4EE5\u7B26\u5408\u547D\u540D\u6163\u4F8B\uFF0C\u56E0\u70BAPORT\u662F\u4E00\u500B\u5E38\u91CF\u3002\u652F\u63F4\u74B0\u5883\u8B8A\u6578\u53EF\u4EE5\u4F7F\u61C9\u7528\u7A0B\u5E8F\u66F4\u9748\u6D3B\uFF0C\u56E0\u70BA\u5B83\u73FE\u5728\u53EF\u4EE5\u901A\u904Eprocess.env.PORT\u74B0\u5883\u8B8A\u6578\u904B\u884C\u5728\u4EFB\u4F55\u53EF\u7528\u7AEF\u53E3\u4E0A\u3002",
-  commitFixOmitScope: "\u4FEE\u6B63\uFF1A\u5C07\u7AEF\u53E3\u8B8A\u6578\u5F9E\u5C0F\u5BEB\u7AEF\u53E3\u6539\u70BA\u5927\u5BEBPORT",
-  commitFeatOmitScope: "\u529F\u80FD\uFF1A\u65B0\u589E\u5C0Dprocess.env.PORT\u74B0\u5883\u8B8A\u6578\u7684\u652F\u63F4"
+  commitFixOmitScope: "\u4FEE\u6B63: \u5C07\u7AEF\u53E3\u8B8A\u6578\u5F9E\u5C0F\u5BEB\u7AEF\u53E3\u6539\u70BA\u5927\u5BEBPORT",
+  commitFeatOmitScope: "\u529F\u80FD: \u65B0\u589E\u5C0Dprocess.env.PORT\u74B0\u5883\u8B8A\u6578\u7684\u652F\u63F4"
 };
 
 // src/i18n/index.ts
@@ -74782,6 +74787,7 @@ var cl100k_base_default = { pat_str: "(?i:'s|'t|'re|'ve|'m|'ll|'d)|[^\\r\\n\\p{L
 // src/utils/tokenCount.ts
 var import_lite = __toESM(require_tiktoken(), 1);
 var TOKENIZER_CHUNK_LENGTH = 8e3;
+var TOKEN_BOUNDARY_RESERVE = 128;
 var encoding;
 var getEncoding = () => {
   encoding ??= new import_lite.Tiktoken(
@@ -74794,7 +74800,7 @@ var getEncoding = () => {
 var getSafeSliceEnd = (content, start, length) => {
   let end = Math.min(start + length, content.length);
   if (end < content.length && end > start && /[\uD800-\uDBFF]/.test(content[end - 1]) && /[\uDC00-\uDFFF]/.test(content[end])) {
-    end -= 1;
+    end = end - 1 === start ? end + 1 : end - 1;
   }
   return end;
 };
@@ -74810,15 +74816,16 @@ var getTextChunks = (content) => {
 var countTextChunk = (content) => getEncoding().encode(content).length;
 var yieldToEventLoop = () => new Promise((resolve) => setImmediate(resolve));
 function tokenCount(content) {
-  return getTextChunks(content).reduce(
-    (total, chunk) => total + countTextChunk(chunk),
-    0
-  );
+  return getTextChunks(content).reduce((total, chunk, index) => {
+    const boundaryReserve = index === 0 ? 0 : TOKEN_BOUNDARY_RESERVE;
+    return total + boundaryReserve + countTextChunk(chunk);
+  }, 0);
 }
 async function tokenCountAsync(content) {
   let total = 0;
-  for (const chunk of getTextChunks(content)) {
-    total += countTextChunk(chunk);
+  for (const [index, chunk] of getTextChunks(content).entries()) {
+    const boundaryReserve = index === 0 ? 0 : TOKEN_BOUNDARY_RESERVE;
+    total += boundaryReserve + countTextChunk(chunk);
     await yieldToEventLoop();
   }
   return total;
@@ -74845,13 +74852,15 @@ async function splitByTokenLimit(content, maxTokens) {
   let currentContent = "";
   let currentTokens = 0;
   for (const chunk of countedChunks) {
-    if (currentContent && currentTokens + chunk.tokens > maxTokens) {
+    const boundaryReserve = currentContent ? TOKEN_BOUNDARY_RESERVE : 0;
+    if (currentContent && currentTokens + boundaryReserve + chunk.tokens > maxTokens) {
       mergedChunks.push(currentContent);
       currentContent = "";
       currentTokens = 0;
     }
+    const appliedBoundaryReserve = currentContent ? TOKEN_BOUNDARY_RESERVE : 0;
     currentContent += chunk.content;
-    currentTokens += chunk.tokens;
+    currentTokens += appliedBoundaryReserve + chunk.tokens;
   }
   if (currentContent) mergedChunks.push(currentContent);
   return mergedChunks;
@@ -85454,19 +85463,60 @@ async function mergeDiffs(arr, maxStringLength) {
   const mergedArr = [];
   let currentItem = arr[0];
   let currentItemTokens = await tokenCountAsync(currentItem);
+  let unverifiedBoundaryTokens = 0;
   for (const item of arr.slice(1)) {
     const itemTokens = await tokenCountAsync(item);
-    if (currentItemTokens + itemTokens <= maxStringLength) {
+    const independentlyCountedTokens = currentItemTokens + itemTokens;
+    const conservativeTokens = independentlyCountedTokens + unverifiedBoundaryTokens + TOKEN_BOUNDARY_RESERVE;
+    if (conservativeTokens <= maxStringLength) {
       currentItem += item;
-      currentItemTokens += itemTokens;
-    } else {
-      mergedArr.push(currentItem);
-      currentItem = item;
-      currentItemTokens = itemTokens;
+      currentItemTokens = independentlyCountedTokens;
+      unverifiedBoundaryTokens += TOKEN_BOUNDARY_RESERVE;
+      continue;
     }
+    const combinedItem = currentItem + item;
+    const combinedItemTokens = await tokenCountAsync(combinedItem);
+    if (combinedItemTokens <= maxStringLength) {
+      currentItem = combinedItem;
+      currentItemTokens = combinedItemTokens;
+      unverifiedBoundaryTokens = 0;
+      continue;
+    }
+    mergedArr.push(currentItem);
+    currentItem = item;
+    currentItemTokens = itemTokens;
+    unverifiedBoundaryTokens = 0;
   }
   mergedArr.push(currentItem);
   return mergedArr;
+}
+
+// src/utils/runTasksWithConcurrency.ts
+async function runTasksWithConcurrency(tasks, concurrency) {
+  if (!Number.isInteger(concurrency) || concurrency < 1) {
+    throw new Error("concurrency must be a positive integer");
+  }
+  const results = new Array(tasks.length);
+  let nextTaskIndex = 0;
+  let hasFailed = false;
+  let firstError;
+  const runWorker = async () => {
+    while (!hasFailed) {
+      const taskIndex = nextTaskIndex;
+      nextTaskIndex += 1;
+      if (taskIndex >= tasks.length) return;
+      try {
+        results[taskIndex] = await tasks[taskIndex]();
+      } catch (error) {
+        if (!hasFailed) firstError = error;
+        hasFailed = true;
+      }
+    }
+  };
+  const workerCount = Math.min(concurrency, tasks.length);
+  await Promise.all(Array.from({ length: workerCount }, () => runWorker()));
+  if (hasFailed) throw firstError;
+  return results;
 }
 
 // src/generateCommitMessageFromGitDiff.ts
@@ -85550,6 +85600,7 @@ async function handleModelNotFoundError(error, provider, currentModel) {
   return newModel;
 }
 var ADJUSTMENT_FACTOR = 20;
+var MAX_CONCURRENT_GENERATIONS = 3;
 var generateCommitMessageByDiff = async (diff, fullGitMojiSpec = false, context = "", retryWithModel) => {
   const currentConfig = getConfig();
   const provider = currentConfig.OCO_AI_PROVIDER || "openai";
@@ -85564,13 +85615,16 @@ var generateCommitMessageByDiff = async (diff, fullGitMojiSpec = false, context 
     ).reduce((a4, b7) => a4 + b7, 0);
     const MAX_REQUEST_TOKENS = MAX_TOKENS_INPUT - ADJUSTMENT_FACTOR - INIT_MESSAGES_PROMPT_LENGTH - MAX_TOKENS_OUTPUT;
     if (await tokenCountAsync(diff) >= MAX_REQUEST_TOKENS) {
-      const commitMessagePromises = await getCommitMsgsPromisesFromFileDiffs(
+      const commitMessageTasks = await getCommitMessageTasksFromFileDiffs(
         diff,
         MAX_REQUEST_TOKENS,
         fullGitMojiSpec,
         context
       );
-      const commitMessages = await Promise.all(commitMessagePromises);
+      const commitMessages = await runTasksWithConcurrency(
+        commitMessageTasks,
+        MAX_CONCURRENT_GENERATIONS
+      );
       return commitMessages.join("\n\n");
     }
     const messages = await generateCommitMessageChatCompletionPrompt(
@@ -85609,7 +85663,7 @@ var generateCommitMessageByDiff = async (diff, fullGitMojiSpec = false, context 
     throw error;
   }
 };
-async function getMessagesPromisesByChangesInFile(fileDiff, separator, maxChangeLength, fullGitMojiSpec, context) {
+async function getMessageTasksByChangesInFile(fileDiff, separator, maxChangeLength, fullGitMojiSpec, context) {
   const hunkHeaderSeparator = "@@ ";
   const [fileHeader, ...fileDiffByLines] = fileDiff.split(hunkHeaderSeparator);
   const mergedChanges = await mergeDiffs(
@@ -85618,59 +85672,80 @@ async function getMessagesPromisesByChangesInFile(fileDiff, separator, maxChange
   );
   const lineDiffsWithHeader = [];
   for (const change of mergedChanges) {
-    const totalChange = fileHeader + change;
+    const diffPrefix = separator + fileHeader;
+    const totalChange = diffPrefix + change;
     if (await tokenCountAsync(totalChange) > maxChangeLength) {
-      const splitChanges = await splitDiff(totalChange, maxChangeLength);
+      const splitChanges = await splitDiff(change, diffPrefix, maxChangeLength);
       lineDiffsWithHeader.push(...splitChanges);
     } else {
       lineDiffsWithHeader.push(totalChange);
     }
   }
-  const engine = getEngine();
-  const commitMsgsFromFileLineDiffs = lineDiffsWithHeader.map(
-    async (lineDiff) => {
+  return lineDiffsWithHeader.map(
+    (lineDiff) => async () => {
       const messages = await generateCommitMessageChatCompletionPrompt(
-        separator + lineDiff,
+        lineDiff,
         fullGitMojiSpec,
         context
       );
+      const engine = getEngine();
       return engine.generateCommitMessage(messages);
     }
   );
-  return commitMsgsFromFileLineDiffs;
 }
-async function splitDiff(diff, maxChangeLength) {
+var getLinesWithEndings = (content) => content.match(/[^\n]*\n|[^\n]+$/g) ?? [];
+async function splitDiff(diff, prefix, maxChangeLength) {
   if (maxChangeLength <= 0) {
     throw new Error(GenerateCommitMessageErrorEnum.outputTokensTooHigh);
   }
-  return splitByTokenLimit(diff, maxChangeLength);
+  const prefixTokens = await tokenCountAsync(prefix);
+  const maxDiffTokens = maxChangeLength - prefixTokens - TOKEN_BOUNDARY_RESERVE;
+  if (maxDiffTokens <= 0) {
+    throw new Error(GenerateCommitMessageErrorEnum.outputTokensTooHigh);
+  }
+  const lineChunks = await mergeDiffs(getLinesWithEndings(diff), maxDiffTokens);
+  const splitDiffs = [];
+  for (const lineChunk of lineChunks) {
+    if (await tokenCountAsync(lineChunk) <= maxDiffTokens) {
+      splitDiffs.push(prefix + lineChunk);
+      continue;
+    }
+    const oversizedLineChunks = await splitByTokenLimit(
+      lineChunk,
+      maxDiffTokens
+    );
+    splitDiffs.push(...oversizedLineChunks.map((chunk) => prefix + chunk));
+  }
+  return splitDiffs;
 }
-var getCommitMsgsPromisesFromFileDiffs = async (diff, maxDiffLength, fullGitMojiSpec, context) => {
+var getCommitMessageTasksFromFileDiffs = async (diff, maxDiffLength, fullGitMojiSpec, context) => {
   const separator = "diff --git ";
-  const diffByFiles = diff.split(separator).slice(1);
+  const diffByFiles = diff.split(separator).slice(1).map((fileDiff) => separator + fileDiff);
   const mergedFilesDiffs = await mergeDiffs(diffByFiles, maxDiffLength);
-  const commitMessagePromises = [];
+  const commitMessageTasks = [];
   for (const fileDiff of mergedFilesDiffs) {
-    if (await tokenCountAsync(fileDiff) >= maxDiffLength) {
-      const messagesPromises = await getMessagesPromisesByChangesInFile(
-        fileDiff,
+    if (await tokenCountAsync(fileDiff) > maxDiffLength) {
+      const messageTasks = await getMessageTasksByChangesInFile(
+        fileDiff.slice(separator.length),
         separator,
         maxDiffLength,
         fullGitMojiSpec,
         context
       );
-      commitMessagePromises.push(...messagesPromises);
+      commitMessageTasks.push(...messageTasks);
     } else {
-      const messages = await generateCommitMessageChatCompletionPrompt(
-        separator + fileDiff,
-        fullGitMojiSpec,
-        context
-      );
-      const engine = getEngine();
-      commitMessagePromises.push(engine.generateCommitMessage(messages));
+      commitMessageTasks.push(async () => {
+        const messages = await generateCommitMessageChatCompletionPrompt(
+          fileDiff,
+          fullGitMojiSpec,
+          context
+        );
+        const engine = getEngine();
+        return engine.generateCommitMessage(messages);
+      });
     }
   }
-  return commitMessagePromises;
+  return commitMessageTasks;
 };
 
 // src/utils/git.ts
