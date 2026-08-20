@@ -1699,20 +1699,20 @@ var require_buffer_stream = __commonJS({
     module2.exports = (options) => {
       options = { ...options };
       const { array } = options;
-      let { encoding } = options;
-      const isBuffer2 = encoding === "buffer";
+      let { encoding: encoding2 } = options;
+      const isBuffer2 = encoding2 === "buffer";
       let objectMode = false;
       if (array) {
-        objectMode = !(encoding || isBuffer2);
+        objectMode = !(encoding2 || isBuffer2);
       } else {
-        encoding = encoding || "utf8";
+        encoding2 = encoding2 || "utf8";
       }
       if (isBuffer2) {
-        encoding = null;
+        encoding2 = null;
       }
       const stream4 = new PassThroughStream({ objectMode });
-      if (encoding) {
-        stream4.setEncoding(encoding);
+      if (encoding2) {
+        stream4.setEncoding(encoding2);
       }
       let length = 0;
       const chunks = [];
@@ -2042,10 +2042,10 @@ var require_main = __commonJS({
     }
     function configDotenv(options) {
       const dotenvPath = path5.resolve(process.cwd(), ".env");
-      let encoding = "utf8";
+      let encoding2 = "utf8";
       const debug5 = Boolean(options && options.debug);
       if (options && options.encoding) {
-        encoding = options.encoding;
+        encoding2 = options.encoding;
       } else {
         if (debug5) {
           _debug("No encoding is specified. UTF-8 is used by default");
@@ -2066,7 +2066,7 @@ var require_main = __commonJS({
       const parsedAll = {};
       for (const path6 of optionPaths) {
         try {
-          const parsed = DotenvModule.parse(fs7.readFileSync(path6, { encoding }));
+          const parsed = DotenvModule.parse(fs7.readFileSync(path6, { encoding: encoding2 }));
           DotenvModule.populate(parsedAll, parsed, options);
         } catch (e3) {
           if (debug5) {
@@ -25085,16 +25085,16 @@ var require_follow_redirects = __commonJS({
       destroy2.call(this, error);
       return this;
     };
-    RedirectableRequest.prototype.write = function(data, encoding, callback) {
+    RedirectableRequest.prototype.write = function(data, encoding2, callback) {
       if (this._ending) {
         throw new WriteAfterEndError();
       }
       if (!isString2(data) && !isBuffer2(data)) {
         throw new TypeError("data should be a string, Buffer or Uint8Array");
       }
-      if (isFunction4(encoding)) {
-        callback = encoding;
-        encoding = null;
+      if (isFunction4(encoding2)) {
+        callback = encoding2;
+        encoding2 = null;
       }
       if (data.length === 0) {
         if (callback) {
@@ -25104,20 +25104,20 @@ var require_follow_redirects = __commonJS({
       }
       if (this._requestBodyLength + data.length <= this._options.maxBodyLength) {
         this._requestBodyLength += data.length;
-        this._requestBodyBuffers.push({ data, encoding });
-        this._currentRequest.write(data, encoding, callback);
+        this._requestBodyBuffers.push({ data, encoding: encoding2 });
+        this._currentRequest.write(data, encoding2, callback);
       } else {
         this.emit("error", new MaxBodyLengthExceededError());
         this.abort();
       }
     };
-    RedirectableRequest.prototype.end = function(data, encoding, callback) {
+    RedirectableRequest.prototype.end = function(data, encoding2, callback) {
       if (isFunction4(data)) {
         callback = data;
-        data = encoding = null;
-      } else if (isFunction4(encoding)) {
-        callback = encoding;
-        encoding = null;
+        data = encoding2 = null;
+      } else if (isFunction4(encoding2)) {
+        callback = encoding2;
+        encoding2 = null;
       }
       if (!data) {
         this._ended = this._ending = true;
@@ -25125,7 +25125,7 @@ var require_follow_redirects = __commonJS({
       } else {
         var self2 = this;
         var currentRequest = this._currentRequest;
-        this.write(data, encoding, function() {
+        this.write(data, encoding2, function() {
           self2._ended = true;
           currentRequest.end(null, null, callback);
         });
@@ -34521,8 +34521,8 @@ var require_matchers = __commonJS({
             error: new sdkerror_js_1.SDKError("Unexpected API response status or content-type", response, responseBody)
           }, responseBody];
         }
-        const encoding = matcher.enc;
-        switch (encoding) {
+        const encoding2 = matcher.enc;
+        switch (encoding2) {
           case "json":
             raw = await response.json();
             break;
@@ -34545,8 +34545,8 @@ var require_matchers = __commonJS({
             raw = await response.text();
             break;
           default:
-            encoding;
-            throw new Error(`Unsupported response type: ${encoding}`);
+            encoding2;
+            throw new Error(`Unsupported response type: ${encoding2}`);
         }
         if (matcher.enc === "fail") {
           return [{
@@ -48565,7 +48565,7 @@ var require_Dicer = __commonJS({
         WritableStream2.prototype.emit.apply(this, arguments);
       }
     };
-    Dicer.prototype._write = function(data, encoding, cb) {
+    Dicer.prototype._write = function(data, encoding2, cb) {
       if (!this._hparser && !this._bparser) {
         return cb();
       }
@@ -49553,7 +49553,7 @@ var require_multipart = __commonJS({
           let fieldname;
           let parsed;
           let charset;
-          let encoding;
+          let encoding2;
           let filename;
           let nsize = 0;
           if (header["content-type"]) {
@@ -49593,9 +49593,9 @@ var require_multipart = __commonJS({
             return skipPart(part);
           }
           if (header["content-transfer-encoding"]) {
-            encoding = header["content-transfer-encoding"][0].toLowerCase();
+            encoding2 = header["content-transfer-encoding"][0].toLowerCase();
           } else {
-            encoding = "7bit";
+            encoding2 = "7bit";
           }
           let onData, onEnd;
           if (isPartAFile(fieldname, contype, filename)) {
@@ -49635,7 +49635,7 @@ var require_multipart = __commonJS({
                 cb();
               }
             };
-            boy.emit("file", fieldname, file, filename, encoding, contype);
+            boy.emit("file", fieldname, file, filename, encoding2, contype);
             onData = function(data) {
               if ((nsize += data.length) > fileSizeLimit) {
                 const extralen = fileSizeLimit - nsize + data.length;
@@ -49684,7 +49684,7 @@ var require_multipart = __commonJS({
               if (buffer.length) {
                 buffer = decodeText(buffer, "binary", charset);
               }
-              boy.emit("field", fieldname, buffer, false, truncated, encoding, contype);
+              boy.emit("field", fieldname, buffer, false, truncated, encoding2, contype);
               --nends;
               checkFinished();
             };
@@ -50202,7 +50202,7 @@ var require_main2 = __commonJS({
       }
       throw new Error("Unsupported Content-Type.");
     };
-    Busboy.prototype._write = function(chunk, encoding, cb) {
+    Busboy.prototype._write = function(chunk, encoding2, cb) {
       this._parser.write(chunk, cb);
     };
     module2.exports = Busboy;
@@ -52329,9 +52329,9 @@ Content-Type: ${value.type || "application/octet-stream"}\r
             busboy.on("field", (name, value) => {
               responseFormData.append(name, value);
             });
-            busboy.on("file", (name, value, filename, encoding, mimeType) => {
+            busboy.on("file", (name, value, filename, encoding2, mimeType) => {
               const chunks = [];
-              if (encoding === "base64" || encoding.toLowerCase() === "base64") {
+              if (encoding2 === "base64" || encoding2.toLowerCase() === "base64") {
                 let base64chunk = "";
                 value.on("data", (chunk) => {
                   base64chunk += chunk.toString().replace(/[\r\n]/gm, "");
@@ -56781,9 +56781,9 @@ var require_api_pipeline = __commonJS({
               body.resume();
             }
           },
-          write: (chunk, encoding, callback) => {
+          write: (chunk, encoding2, callback) => {
             const { req } = this;
-            if (req.push(chunk, encoding) || req._readableState.destroyed) {
+            if (req.push(chunk, encoding2) || req._readableState.destroyed) {
               callback();
             } else {
               req[kResume] = callback;
@@ -60900,7 +60900,7 @@ var require_progressevent = __commonJS({
 var require_encoding2 = __commonJS({
   "node_modules/undici/lib/fileapi/encoding.js"(exports2, module2) {
     "use strict";
-    function getEncoding(label) {
+    function getEncoding2(label) {
       if (!label) {
         return "failure";
       }
@@ -61177,7 +61177,7 @@ var require_encoding2 = __commonJS({
       }
     }
     module2.exports = {
-      getEncoding
+      getEncoding: getEncoding2
     };
   }
 });
@@ -61194,7 +61194,7 @@ var require_util5 = __commonJS({
       kLastProgressEventFired
     } = require_symbols3();
     var { ProgressEvent } = require_progressevent();
-    var { getEncoding } = require_encoding2();
+    var { getEncoding: getEncoding2 } = require_encoding2();
     var { DOMException: DOMException3 } = require_constants3();
     var { serializeAMimeType, parseMIMEType } = require_dataURL();
     var { types } = require("util");
@@ -61297,20 +61297,20 @@ var require_util5 = __commonJS({
           return dataURL;
         }
         case "Text": {
-          let encoding = "failure";
+          let encoding2 = "failure";
           if (encodingName) {
-            encoding = getEncoding(encodingName);
+            encoding2 = getEncoding2(encodingName);
           }
-          if (encoding === "failure" && mimeType) {
+          if (encoding2 === "failure" && mimeType) {
             const type3 = parseMIMEType(mimeType);
             if (type3 !== "failure") {
-              encoding = getEncoding(type3.parameters.get("charset"));
+              encoding2 = getEncoding2(type3.parameters.get("charset"));
             }
           }
-          if (encoding === "failure") {
-            encoding = "UTF-8";
+          if (encoding2 === "failure") {
+            encoding2 = "UTF-8";
           }
-          return decode(bytes, encoding);
+          return decode(bytes, encoding2);
         }
         case "ArrayBuffer": {
           const sequence = combineByteSequences(bytes);
@@ -61327,16 +61327,16 @@ var require_util5 = __commonJS({
         }
       }
     }
-    function decode(ioQueue, encoding) {
+    function decode(ioQueue, encoding2) {
       const bytes = combineByteSequences(ioQueue);
       const BOMEncoding = BOMSniffing(bytes);
       let slice = 0;
       if (BOMEncoding !== null) {
-        encoding = BOMEncoding;
+        encoding2 = BOMEncoding;
         slice = BOMEncoding === "UTF-8" ? 3 : 2;
       }
       const sliced = bytes.slice(slice);
-      return new TextDecoder(encoding).decode(sliced);
+      return new TextDecoder(encoding2).decode(sliced);
     }
     function BOMSniffing(ioQueue) {
       const [a4, b7, c4] = ioQueue;
@@ -61426,14 +61426,14 @@ var require_filereader = __commonJS({
        * @param {import('buffer').Blob} blob
        * @param {string?} encoding
        */
-      readAsText(blob, encoding = void 0) {
+      readAsText(blob, encoding2 = void 0) {
         webidl.brandCheck(this, _FileReader);
         webidl.argumentLengthCheck(arguments, 1, { header: "FileReader.readAsText" });
         blob = webidl.converters.Blob(blob, { strict: false });
-        if (encoding !== void 0) {
-          encoding = webidl.converters.DOMString(encoding);
+        if (encoding2 !== void 0) {
+          encoding2 = webidl.converters.DOMString(encoding2);
         }
-        readOperation(this, blob, "Text", encoding);
+        readOperation(this, blob, "Text", encoding2);
       }
       /**
        * @see https://w3c.github.io/FileAPI/#dfn-readAsDataURL
@@ -65273,7 +65273,7 @@ function G3(t2, e3) {
 // package.json
 var package_default = {
   name: "opencommit",
-  version: "3.3.10-rc.1",
+  version: "3.3.10",
   description: "Auto-generate impressive commits in 1 second. Killing lame commits with AI \u{1F92F}\u{1F52B}",
   keywords: [
     "git",
@@ -66680,19 +66680,19 @@ var getBufferedData = async (stream4, streamPromise) => {
     return error.bufferedData;
   }
 };
-var getStreamPromise = (stream4, { encoding, buffer, maxBuffer }) => {
+var getStreamPromise = (stream4, { encoding: encoding2, buffer, maxBuffer }) => {
   if (!stream4 || !buffer) {
     return;
   }
-  if (encoding) {
-    return (0, import_get_stream.default)(stream4, { encoding, maxBuffer });
+  if (encoding2) {
+    return (0, import_get_stream.default)(stream4, { encoding: encoding2, maxBuffer });
   }
   return import_get_stream.default.buffer(stream4, { maxBuffer });
 };
-var getSpawnedResult = async ({ stdout, stderr: stderr2, all: all3 }, { encoding, buffer, maxBuffer }, processDone) => {
-  const stdoutPromise = getStreamPromise(stdout, { encoding, buffer, maxBuffer });
-  const stderrPromise = getStreamPromise(stderr2, { encoding, buffer, maxBuffer });
-  const allPromise = getStreamPromise(all3, { encoding, buffer, maxBuffer: maxBuffer * 2 });
+var getSpawnedResult = async ({ stdout, stderr: stderr2, all: all3 }, { encoding: encoding2, buffer, maxBuffer }, processDone) => {
+  const stdoutPromise = getStreamPromise(stdout, { encoding: encoding2, buffer, maxBuffer });
+  const stderrPromise = getStreamPromise(stderr2, { encoding: encoding2, buffer, maxBuffer });
+  const allPromise = getStreamPromise(all3, { encoding: encoding2, buffer, maxBuffer: maxBuffer * 2 });
   try {
     return await Promise.all([processDone, stdoutPromise, stderrPromise, allPromise]);
   } catch (error) {
@@ -67236,21 +67236,21 @@ var vi_VN_default = {
 // src/i18n/zh_CN.json
 var zh_CN_default = {
   localLanguage: "\u7B80\u4F53\u4E2D\u6587",
-  commitFix: "fix(server.ts): \u5C06\u7AEF\u53E3\u53D8\u91CF\u4ECE\u5C0F\u5199port\u6539\u4E3A\u5927\u5199PORT",
-  commitFeat: "feat(server.ts): \u6DFB\u52A0\u5BF9process.env.PORT\u73AF\u5883\u53D8\u91CF\u7684\u652F\u6301",
+  commitFix: "fix(server.ts)\uFF1A\u5C06\u7AEF\u53E3\u53D8\u91CF\u4ECE\u5C0F\u5199port\u6539\u4E3A\u5927\u5199PORT",
+  commitFeat: "feat(server.ts)\uFF1A\u6DFB\u52A0\u5BF9process.env.PORT\u73AF\u5883\u53D8\u91CF\u7684\u652F\u6301",
   commitDescription: "\u73B0\u5728\u7AEF\u53E3\u53D8\u91CF\u88AB\u547D\u540D\u4E3APORT\uFF0C\u8FD9\u63D0\u9AD8\u4E86\u547D\u540D\u7EA6\u5B9A\u7684\u4E00\u81F4\u6027\uFF0C\u56E0\u4E3APORT\u662F\u4E00\u4E2A\u5E38\u91CF\u3002\u73AF\u5883\u53D8\u91CF\u7684\u652F\u6301\u4F7F\u5E94\u7528\u7A0B\u5E8F\u66F4\u52A0\u7075\u6D3B\uFF0C\u56E0\u4E3A\u5B83\u73B0\u5728\u53EF\u4EE5\u901A\u8FC7process.env.PORT\u73AF\u5883\u53D8\u91CF\u5728\u4EFB\u4F55\u53EF\u7528\u7AEF\u53E3\u4E0A\u8FD0\u884C\u3002",
-  commitFixOmitScope: "fix: \u5C06\u7AEF\u53E3\u53D8\u91CF\u4ECE\u5C0F\u5199port\u6539\u4E3A\u5927\u5199PORT",
-  commitFeatOmitScope: "feat: \u6DFB\u52A0\u5BF9process.env.PORT\u73AF\u5883\u53D8\u91CF\u7684\u652F\u6301"
+  commitFixOmitScope: "fix\uFF1A\u5C06\u7AEF\u53E3\u53D8\u91CF\u4ECE\u5C0F\u5199port\u6539\u4E3A\u5927\u5199PORT",
+  commitFeatOmitScope: "feat\uFF1A\u6DFB\u52A0\u5BF9process.env.PORT\u73AF\u5883\u53D8\u91CF\u7684\u652F\u6301"
 };
 
 // src/i18n/zh_TW.json
 var zh_TW_default = {
   localLanguage: "\u7E41\u9AD4\u4E2D\u6587",
-  commitFix: "\u4FEE\u6B63(server.ts): \u5C07\u7AEF\u53E3\u8B8A\u6578\u5F9E\u5C0F\u5BEB\u7AEF\u53E3\u6539\u70BA\u5927\u5BEBPORT",
-  commitFeat: "\u529F\u80FD(server.ts): \u65B0\u589E\u5C0Dprocess.env.PORT\u74B0\u5883\u8B8A\u6578\u7684\u652F\u63F4",
+  commitFix: "\u4FEE\u6B63(server.ts)\uFF1A\u5C07\u7AEF\u53E3\u8B8A\u6578\u5F9E\u5C0F\u5BEB\u7AEF\u53E3\u6539\u70BA\u5927\u5BEBPORT",
+  commitFeat: "\u529F\u80FD(server.ts)\uFF1A\u65B0\u589E\u5C0Dprocess.env.PORT\u74B0\u5883\u8B8A\u6578\u7684\u652F\u63F4",
   commitDescription: "\u73FE\u5728port\u8B8A\u6578\u5DF2\u66F4\u540D\u70BAPORT\uFF0C\u4EE5\u7B26\u5408\u547D\u540D\u6163\u4F8B\uFF0C\u56E0\u70BAPORT\u662F\u4E00\u500B\u5E38\u91CF\u3002\u652F\u63F4\u74B0\u5883\u8B8A\u6578\u53EF\u4EE5\u4F7F\u61C9\u7528\u7A0B\u5E8F\u66F4\u9748\u6D3B\uFF0C\u56E0\u70BA\u5B83\u73FE\u5728\u53EF\u4EE5\u901A\u904Eprocess.env.PORT\u74B0\u5883\u8B8A\u6578\u904B\u884C\u5728\u4EFB\u4F55\u53EF\u7528\u7AEF\u53E3\u4E0A\u3002",
-  commitFixOmitScope: "\u4FEE\u6B63: \u5C07\u7AEF\u53E3\u8B8A\u6578\u5F9E\u5C0F\u5BEB\u7AEF\u53E3\u6539\u70BA\u5927\u5BEBPORT",
-  commitFeatOmitScope: "\u529F\u80FD: \u65B0\u589E\u5C0Dprocess.env.PORT\u74B0\u5883\u8B8A\u6578\u7684\u652F\u63F4"
+  commitFixOmitScope: "\u4FEE\u6B63\uFF1A\u5C07\u7AEF\u53E3\u8B8A\u6578\u5F9E\u5C0F\u5BEB\u7AEF\u53E3\u6539\u70BA\u5927\u5BEBPORT",
+  commitFeatOmitScope: "\u529F\u80FD\uFF1A\u65B0\u589E\u5C0Dprocess.env.PORT\u74B0\u5883\u8B8A\u6578\u7684\u652F\u63F4"
 };
 
 // src/i18n/index.ts
@@ -72390,7 +72390,7 @@ var AxiosTransformStream = class extends import_stream2.default.Transform {
     }
     return super._read(size);
   }
-  _transform(chunk, encoding, callback) {
+  _transform(chunk, encoding2, callback) {
     const internals = this[kInternals];
     const maxRate = internals.maxRate;
     const readableHighWaterMark = this.readableHighWaterMark;
@@ -72564,21 +72564,21 @@ var formDataToStream_default = formDataToStream;
 // node_modules/axios/lib/helpers/ZlibHeaderTransformStream.js
 var import_stream4 = __toESM(require("stream"), 1);
 var ZlibHeaderTransformStream = class extends import_stream4.default.Transform {
-  __transform(chunk, encoding, callback) {
+  __transform(chunk, encoding2, callback) {
     this.push(chunk);
     callback();
   }
-  _transform(chunk, encoding, callback) {
+  _transform(chunk, encoding2, callback) {
     if (chunk.length !== 0) {
       this._transform = this.__transform;
       if (chunk[0] !== 120) {
         const header = Buffer.alloc(2);
         header[0] = 120;
         header[1] = 156;
-        this.push(header, encoding);
+        this.push(header, encoding2);
       }
     }
-    this.__transform(chunk, encoding, callback);
+    this.__transform(chunk, encoding2, callback);
   }
 };
 var ZlibHeaderTransformStream_default = ZlibHeaderTransformStream;
@@ -74526,89 +74526,78 @@ function getServiceUnavailableMessage(provider, context) {
   }
   return `The ${provider} service is temporarily unavailable.`;
 }
+function formatInsufficientCredits(provider, billingUrl) {
+  return {
+    title: "Insufficient Credits",
+    message: `Your ${provider} account has insufficient credits or quota.`,
+    helpUrl: billingUrl,
+    suggestion: "Add credits to your account to continue using the service."
+  };
+}
+function formatRateLimit(provider, billingUrl, retryAfter) {
+  return {
+    title: "Rate Limit Exceeded",
+    message: `You've made too many requests to ${provider}.`,
+    helpUrl: billingUrl,
+    suggestion: retryAfter ? `Please wait ${retryAfter} seconds before retrying.` : "Please wait a moment before retrying."
+  };
+}
+function formatServiceUnavailable(provider, context) {
+  return {
+    title: "Service Unavailable",
+    message: getServiceUnavailableMessage(provider, context),
+    helpUrl: null,
+    suggestion: "Please try again in a few moments."
+  };
+}
+function formatAuthenticationError(provider, billingUrl) {
+  return {
+    title: "Authentication Failed",
+    message: `Your ${provider} API key is invalid or expired.`,
+    helpUrl: billingUrl,
+    suggestion: "Run `oco setup` to configure a valid API key."
+  };
+}
+function formatModelNotFound(provider, model) {
+  return {
+    title: "Model Not Found",
+    message: `The model '${model}' is not available for ${provider}.`,
+    helpUrl: null,
+    suggestion: "Run `oco setup` to select a valid model."
+  };
+}
 function formatUserFriendlyError(error, provider, context) {
   const billingUrl = PROVIDER_BILLING_URLS[provider] || null;
   if (error instanceof InsufficientCreditsError) {
-    return {
-      title: "Insufficient Credits",
-      message: `Your ${provider} account has insufficient credits or quota.`,
-      helpUrl: billingUrl,
-      suggestion: "Add credits to your account to continue using the service."
-    };
+    return formatInsufficientCredits(provider, billingUrl);
   }
   if (error instanceof RateLimitError3) {
-    const retryMsg = error.retryAfter ? `Please wait ${error.retryAfter} seconds before retrying.` : "Please wait a moment before retrying.";
-    return {
-      title: "Rate Limit Exceeded",
-      message: `You've made too many requests to ${provider}.`,
-      helpUrl: billingUrl,
-      suggestion: retryMsg
-    };
+    return formatRateLimit(provider, billingUrl, error.retryAfter);
   }
   if (error instanceof ServiceUnavailableError) {
-    return {
-      title: "Service Unavailable",
-      message: getServiceUnavailableMessage(provider, context),
-      helpUrl: null,
-      suggestion: "Please try again in a few moments."
-    };
+    return formatServiceUnavailable(provider, context);
   }
   if (error instanceof AuthenticationError3) {
-    return {
-      title: "Authentication Failed",
-      message: `Your ${provider} API key is invalid or expired.`,
-      helpUrl: billingUrl,
-      suggestion: "Run `oco setup` to configure a valid API key."
-    };
+    return formatAuthenticationError(provider, billingUrl);
   }
   if (error instanceof ModelNotFoundError) {
-    return {
-      title: "Model Not Found",
-      message: `The model '${error.modelName}' is not available for ${provider}.`,
-      helpUrl: null,
-      suggestion: "Run `oco setup` to select a valid model."
-    };
+    return formatModelNotFound(provider, error.modelName);
   }
   if (isInsufficientCreditsError(error)) {
-    return {
-      title: "Insufficient Credits",
-      message: `Your ${provider} account has insufficient credits or quota.`,
-      helpUrl: billingUrl,
-      suggestion: "Add credits to your account to continue using the service."
-    };
+    return formatInsufficientCredits(provider, billingUrl);
   }
   if (isRateLimitError(error)) {
-    return {
-      title: "Rate Limit Exceeded",
-      message: `You've made too many requests to ${provider}.`,
-      helpUrl: billingUrl,
-      suggestion: "Please wait a moment before retrying."
-    };
+    return formatRateLimit(provider, billingUrl);
   }
   if (isServiceUnavailableError(error)) {
-    return {
-      title: "Service Unavailable",
-      message: getServiceUnavailableMessage(provider, context),
-      helpUrl: null,
-      suggestion: "Please try again in a few moments."
-    };
+    return formatServiceUnavailable(provider, context);
   }
   if (isApiKeyError(error)) {
-    return {
-      title: "Authentication Failed",
-      message: `Your ${provider} API key is invalid or expired.`,
-      helpUrl: billingUrl,
-      suggestion: "Run `oco setup` to configure a valid API key."
-    };
+    return formatAuthenticationError(provider, billingUrl);
   }
   if (isModelNotFoundError(error)) {
     const model = error.modelName || error.model || "unknown";
-    return {
-      title: "Model Not Found",
-      message: `The model '${model}' is not available for ${provider}.`,
-      helpUrl: null,
-      suggestion: "Run `oco setup` to select a valid model."
-    };
+    return formatModelNotFound(provider, model);
   }
   const errorMessage = error instanceof Error ? error.message : String(error);
   return {
@@ -74792,15 +74781,80 @@ var cl100k_base_default = { pat_str: "(?i:'s|'t|'re|'ve|'m|'ll|'d)|[^\\r\\n\\p{L
 
 // src/utils/tokenCount.ts
 var import_lite = __toESM(require_tiktoken(), 1);
-function tokenCount(content) {
-  const encoding = new import_lite.Tiktoken(
+var TOKENIZER_CHUNK_LENGTH = 8e3;
+var encoding;
+var getEncoding = () => {
+  encoding ??= new import_lite.Tiktoken(
     cl100k_base_default.bpe_ranks,
     cl100k_base_default.special_tokens,
     cl100k_base_default.pat_str
   );
-  const tokens = encoding.encode(content);
-  encoding.free();
-  return tokens.length;
+  return encoding;
+};
+var getSafeSliceEnd = (content, start, length) => {
+  let end = Math.min(start + length, content.length);
+  if (end < content.length && end > start && /[\uD800-\uDBFF]/.test(content[end - 1]) && /[\uDC00-\uDFFF]/.test(content[end])) {
+    end -= 1;
+  }
+  return end;
+};
+var getTextChunks = (content) => {
+  const chunks = [];
+  for (let start = 0; start < content.length; ) {
+    const end = getSafeSliceEnd(content, start, TOKENIZER_CHUNK_LENGTH);
+    chunks.push(content.slice(start, end));
+    start = end;
+  }
+  return chunks;
+};
+var countTextChunk = (content) => getEncoding().encode(content).length;
+var yieldToEventLoop = () => new Promise((resolve) => setImmediate(resolve));
+function tokenCount(content) {
+  return getTextChunks(content).reduce(
+    (total, chunk) => total + countTextChunk(chunk),
+    0
+  );
+}
+async function tokenCountAsync(content) {
+  let total = 0;
+  for (const chunk of getTextChunks(content)) {
+    total += countTextChunk(chunk);
+    await yieldToEventLoop();
+  }
+  return total;
+}
+var getBoundedTokenChunks = async (content, maxTokens) => {
+  const tokens = countTextChunk(content);
+  await yieldToEventLoop();
+  if (tokens <= maxTokens) return [{ content, tokens }];
+  const middle = getSafeSliceEnd(content, 0, Math.floor(content.length / 2));
+  if (middle === 0 || middle === content.length) return [{ content, tokens }];
+  return [
+    ...await getBoundedTokenChunks(content.slice(0, middle), maxTokens),
+    ...await getBoundedTokenChunks(content.slice(middle), maxTokens)
+  ];
+};
+async function splitByTokenLimit(content, maxTokens) {
+  if (maxTokens <= 0) throw new Error("maxTokens must be greater than zero");
+  if (!content) return [];
+  const countedChunks = [];
+  for (const chunk of getTextChunks(content)) {
+    countedChunks.push(...await getBoundedTokenChunks(chunk, maxTokens));
+  }
+  const mergedChunks = [];
+  let currentContent = "";
+  let currentTokens = 0;
+  for (const chunk of countedChunks) {
+    if (currentContent && currentTokens + chunk.tokens > maxTokens) {
+      mergedChunks.push(currentContent);
+      currentContent = "";
+      currentTokens = 0;
+    }
+    currentContent += chunk.content;
+    currentTokens += chunk.tokens;
+  }
+  if (currentContent) mergedChunks.push(currentContent);
+  return mergedChunks;
 }
 
 // src/engine/anthropic.ts
@@ -85395,15 +85449,20 @@ var getMainCommitPrompt = async (fullGitMojiSpec, context) => {
 };
 
 // src/utils/mergeDiffs.ts
-function mergeDiffs(arr, maxStringLength) {
+async function mergeDiffs(arr, maxStringLength) {
+  if (!arr.length) return [];
   const mergedArr = [];
   let currentItem = arr[0];
+  let currentItemTokens = await tokenCountAsync(currentItem);
   for (const item of arr.slice(1)) {
-    if (tokenCount(currentItem + item) <= maxStringLength) {
+    const itemTokens = await tokenCountAsync(item);
+    if (currentItemTokens + itemTokens <= maxStringLength) {
       currentItem += item;
+      currentItemTokens += itemTokens;
     } else {
       mergedArr.push(currentItem);
       currentItem = item;
+      currentItemTokens = itemTokens;
     }
   }
   mergedArr.push(currentItem);
@@ -85504,7 +85563,7 @@ var generateCommitMessageByDiff = async (diff, fullGitMojiSpec = false, context 
       (msg) => tokenCount(msg.content) + 4
     ).reduce((a4, b7) => a4 + b7, 0);
     const MAX_REQUEST_TOKENS = MAX_TOKENS_INPUT - ADJUSTMENT_FACTOR - INIT_MESSAGES_PROMPT_LENGTH - MAX_TOKENS_OUTPUT;
-    if (tokenCount(diff) >= MAX_REQUEST_TOKENS) {
+    if (await tokenCountAsync(diff) >= MAX_REQUEST_TOKENS) {
       const commitMessagePromises = await getCommitMsgsPromisesFromFileDiffs(
         diff,
         MAX_REQUEST_TOKENS,
@@ -85550,18 +85609,18 @@ var generateCommitMessageByDiff = async (diff, fullGitMojiSpec = false, context 
     throw error;
   }
 };
-function getMessagesPromisesByChangesInFile(fileDiff, separator, maxChangeLength, fullGitMojiSpec, context) {
+async function getMessagesPromisesByChangesInFile(fileDiff, separator, maxChangeLength, fullGitMojiSpec, context) {
   const hunkHeaderSeparator = "@@ ";
   const [fileHeader, ...fileDiffByLines] = fileDiff.split(hunkHeaderSeparator);
-  const mergedChanges = mergeDiffs(
+  const mergedChanges = await mergeDiffs(
     fileDiffByLines.map((line) => hunkHeaderSeparator + line),
     maxChangeLength
   );
   const lineDiffsWithHeader = [];
   for (const change of mergedChanges) {
     const totalChange = fileHeader + change;
-    if (tokenCount(totalChange) > maxChangeLength) {
-      const splitChanges = splitDiff(totalChange, maxChangeLength);
+    if (await tokenCountAsync(totalChange) > maxChangeLength) {
+      const splitChanges = await splitDiff(totalChange, maxChangeLength);
       lineDiffsWithHeader.push(...splitChanges);
     } else {
       lineDiffsWithHeader.push(totalChange);
@@ -85580,39 +85639,20 @@ function getMessagesPromisesByChangesInFile(fileDiff, separator, maxChangeLength
   );
   return commitMsgsFromFileLineDiffs;
 }
-function splitDiff(diff, maxChangeLength) {
-  const lines = diff.split("\n");
-  const splitDiffs = [];
-  let currentDiff = "";
+async function splitDiff(diff, maxChangeLength) {
   if (maxChangeLength <= 0) {
     throw new Error(GenerateCommitMessageErrorEnum.outputTokensTooHigh);
   }
-  for (let line of lines) {
-    while (tokenCount(line) > maxChangeLength) {
-      const subLine = line.substring(0, maxChangeLength);
-      line = line.substring(maxChangeLength);
-      splitDiffs.push(subLine);
-    }
-    if (tokenCount(currentDiff) + tokenCount("\n" + line) > maxChangeLength) {
-      splitDiffs.push(currentDiff);
-      currentDiff = line;
-    } else {
-      currentDiff += "\n" + line;
-    }
-  }
-  if (currentDiff) {
-    splitDiffs.push(currentDiff);
-  }
-  return splitDiffs;
+  return splitByTokenLimit(diff, maxChangeLength);
 }
 var getCommitMsgsPromisesFromFileDiffs = async (diff, maxDiffLength, fullGitMojiSpec, context) => {
   const separator = "diff --git ";
   const diffByFiles = diff.split(separator).slice(1);
-  const mergedFilesDiffs = mergeDiffs(diffByFiles, maxDiffLength);
+  const mergedFilesDiffs = await mergeDiffs(diffByFiles, maxDiffLength);
   const commitMessagePromises = [];
   for (const fileDiff of mergedFilesDiffs) {
-    if (tokenCount(fileDiff) >= maxDiffLength) {
-      const messagesPromises = getMessagesPromisesByChangesInFile(
+    if (await tokenCountAsync(fileDiff) >= maxDiffLength) {
+      const messagesPromises = await getMessagesPromisesByChangesInFile(
         fileDiff,
         separator,
         maxDiffLength,
@@ -85727,6 +85767,21 @@ var getGitDir = async () => {
   return gitDir;
 };
 
+// src/utils/gitPush.ts
+function buildGitPushArgs(options, upstreamBranch) {
+  const args = ["push"];
+  if (options.mode === "remote") {
+    if (options.verbose) args.push("--verbose");
+    args.push(options.remote);
+  }
+  if (upstreamBranch !== null) {
+    args.push("--set-upstream");
+    if (options.mode === "default") args.push(options.fallbackRemote);
+    args.push(upstreamBranch);
+  }
+  return args;
+}
+
 // src/utils/trytm.ts
 var trytm = async (promise) => {
   try {
@@ -85760,6 +85815,10 @@ var hasUpstreamBranch = async () => {
 var getCurrentBranch = async () => {
   const { stdout } = await execa("git", ["branch", "--show-current"]);
   return stdout.trim();
+};
+var runGitPush = async (options) => {
+  const upstreamBranch = await hasUpstreamBranch() ? null : await getCurrentBranch();
+  return await execa("git", buildGitPushArgs(options, upstreamBranch));
 };
 var displayPushUrl = (stderr2) => {
   const urlMatch = stderr2.match(/https?:\/\/\S+/);
@@ -85838,11 +85897,10 @@ ${source_default.grey("\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2
       const remotes = await getGitRemotes();
       if (config6.OCO_GITPUSH === false) return;
       if (!remotes.length) {
-        const pushArgs = ["push"];
-        if (!await hasUpstreamBranch()) {
-          pushArgs.push("--set-upstream", "origin", await getCurrentBranch());
-        }
-        const { stdout: stdout2, stderr: stderr2 } = await execa("git", pushArgs);
+        const { stdout: stdout2, stderr: stderr2 } = await runGitPush({
+          mode: "default",
+          fallbackRemote: "origin"
+        });
         if (stdout2) ce(stdout2);
         displayPushUrl(stderr2);
         process.exit(0);
@@ -85855,11 +85913,11 @@ ${source_default.grey("\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2
         if (isPushConfirmedByUser) {
           const pushSpinner = le();
           pushSpinner.start(`Running 'git push ${remotes[0]}'`);
-          const pushArgs = ["push", "--verbose", remotes[0]];
-          if (!await hasUpstreamBranch()) {
-            pushArgs.push("--set-upstream", await getCurrentBranch());
-          }
-          const { stdout: stdout2, stderr: stderr2 } = await execa("git", pushArgs);
+          const { stdout: stdout2, stderr: stderr2 } = await runGitPush({
+            mode: "remote",
+            remote: remotes[0],
+            verbose: true
+          });
           pushSpinner.stop(
             `${source_default.green("\u2714")} Successfully pushed all commits to ${remotes[0]}`
           );
@@ -85882,11 +85940,11 @@ ${source_default.grey("\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2014\u2
         if (selectedRemote !== skipOption) {
           const pushSpinner = le();
           pushSpinner.start(`Running 'git push ${selectedRemote}'`);
-          const pushArgs = ["push", selectedRemote];
-          if (!await hasUpstreamBranch()) {
-            pushArgs.push("--set-upstream", await getCurrentBranch());
-          }
-          const { stdout: stdout2, stderr: stderr2 } = await execa("git", pushArgs);
+          const { stdout: stdout2, stderr: stderr2 } = await runGitPush({
+            mode: "remote",
+            remote: selectedRemote,
+            verbose: false
+          });
           if (stdout2) ce(stdout2);
           pushSpinner.stop(
             `${source_default.green(
@@ -86214,136 +86272,89 @@ function isCacheValid(cache) {
   if (!cache) return false;
   return Date.now() - cache.timestamp < CACHE_TTL_MS;
 }
-async function fetchOpenAIModels(apiKey) {
+async function fetchModelList({
+  url: url2,
+  headers,
+  fallback,
+  mapModels
+}) {
   try {
-    const response = await fetch("https://api.openai.com/v1/models", {
-      headers: {
-        Authorization: `Bearer ${apiKey}`
-      }
-    });
+    const response = headers ? await fetch(url2, { headers }) : await fetch(url2);
     if (!response.ok) {
-      return MODEL_LIST.openai;
+      return fallback;
     }
-    const data = await response.json();
-    const models = data.data.map((m5) => m5.id).filter(
-      (id) => id.startsWith("gpt-") || id.startsWith("o1") || id.startsWith("o3") || id.startsWith("o4")
-    ).sort();
-    return models.length > 0 ? models : MODEL_LIST.openai;
+    const models = mapModels(await response.json());
+    return models && models.length > 0 ? models : fallback;
   } catch {
-    return MODEL_LIST.openai;
+    return fallback;
   }
+}
+async function fetchOpenAIModels(apiKey) {
+  return fetchModelList({
+    url: "https://api.openai.com/v1/models",
+    headers: { Authorization: `Bearer ${apiKey}` },
+    fallback: MODEL_LIST.openai,
+    mapModels: (data) => data.data.map((model) => model.id).filter(
+      (id) => id.startsWith("gpt-") || id.startsWith("o1") || id.startsWith("o3") || id.startsWith("o4")
+    ).sort()
+  });
 }
 async function fetchOllamaModels(baseUrl = "http://localhost:11434") {
-  try {
-    const response = await fetch(`${baseUrl}/api/tags`);
-    if (!response.ok) {
-      return [];
-    }
-    const data = await response.json();
-    return data.models?.map((m5) => m5.name) || [];
-  } catch {
-    return [];
-  }
+  return fetchModelList({
+    url: `${baseUrl}/api/tags`,
+    fallback: [],
+    mapModels: (data) => data.models?.map((model) => model.name)
+  });
 }
 async function fetchLlamaCppModels(baseUrl = "http://localhost:8080") {
-  try {
-    const response = await fetch(`${baseUrl}/v1/models`);
-    if (!response.ok) {
-      return [];
-    }
-    const data = await response.json();
-    return data.data?.map((m5) => m5.id) || [];
-  } catch {
-    return [];
-  }
+  return fetchModelList({
+    url: `${baseUrl}/v1/models`,
+    fallback: [],
+    mapModels: (data) => data.data?.map((model) => model.id)
+  });
 }
 async function fetchAnthropicModels(apiKey) {
-  try {
-    const response = await fetch("https://api.anthropic.com/v1/models", {
-      headers: {
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01"
-      }
-    });
-    if (!response.ok) {
-      return MODEL_LIST.anthropic;
-    }
-    const data = await response.json();
-    const models = data.data?.map((m5) => m5.id).filter((id) => id.startsWith("claude-")).sort();
-    return models && models.length > 0 ? models : MODEL_LIST.anthropic;
-  } catch {
-    return MODEL_LIST.anthropic;
-  }
+  return fetchModelList({
+    url: "https://api.anthropic.com/v1/models",
+    headers: {
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01"
+    },
+    fallback: MODEL_LIST.anthropic,
+    mapModels: (data) => data.data?.map((model) => model.id).filter((id) => id.startsWith("claude-")).sort()
+  });
 }
 async function fetchMistralModels(apiKey) {
-  try {
-    const response = await fetch("https://api.mistral.ai/v1/models", {
-      headers: {
-        Authorization: `Bearer ${apiKey}`
-      }
-    });
-    if (!response.ok) {
-      return MODEL_LIST.mistral;
-    }
-    const data = await response.json();
-    const models = data.data?.map((m5) => m5.id).sort();
-    return models && models.length > 0 ? models : MODEL_LIST.mistral;
-  } catch {
-    return MODEL_LIST.mistral;
-  }
+  return fetchModelList({
+    url: "https://api.mistral.ai/v1/models",
+    headers: { Authorization: `Bearer ${apiKey}` },
+    fallback: MODEL_LIST.mistral,
+    mapModels: (data) => data.data?.map((model) => model.id).sort()
+  });
 }
 async function fetchGroqModels(apiKey) {
-  try {
-    const response = await fetch("https://api.groq.com/openai/v1/models", {
-      headers: {
-        Authorization: `Bearer ${apiKey}`
-      }
-    });
-    if (!response.ok) {
-      return MODEL_LIST.groq;
-    }
-    const data = await response.json();
-    const models = data.data?.map((m5) => m5.id).sort();
-    return models && models.length > 0 ? models : MODEL_LIST.groq;
-  } catch {
-    return MODEL_LIST.groq;
-  }
+  return fetchModelList({
+    url: "https://api.groq.com/openai/v1/models",
+    headers: { Authorization: `Bearer ${apiKey}` },
+    fallback: MODEL_LIST.groq,
+    mapModels: (data) => data.data?.map((model) => model.id).sort()
+  });
 }
 async function fetchOpenRouterModels(apiKey) {
-  try {
-    const response = await fetch("https://openrouter.ai/api/v1/models", {
-      headers: {
-        Authorization: `Bearer ${apiKey}`
-      }
-    });
-    if (!response.ok) {
-      return MODEL_LIST.openrouter;
-    }
-    const data = await response.json();
-    const models = data.data?.filter(
-      (m5) => m5.context_length && m5.context_length > 0
-    ).map((m5) => m5.id).sort();
-    return models && models.length > 0 ? models : MODEL_LIST.openrouter;
-  } catch {
-    return MODEL_LIST.openrouter;
-  }
+  return fetchModelList({
+    url: "https://openrouter.ai/api/v1/models",
+    headers: { Authorization: `Bearer ${apiKey}` },
+    fallback: MODEL_LIST.openrouter,
+    mapModels: (data) => data.data?.filter((model) => model.context_length && model.context_length > 0).map((model) => model.id).sort()
+  });
 }
 async function fetchDeepSeekModels(apiKey) {
-  try {
-    const response = await fetch("https://api.deepseek.com/v1/models", {
-      headers: {
-        Authorization: `Bearer ${apiKey}`
-      }
-    });
-    if (!response.ok) {
-      return MODEL_LIST.deepseek;
-    }
-    const data = await response.json();
-    const models = data.data?.map((m5) => m5.id).sort();
-    return models && models.length > 0 ? models : MODEL_LIST.deepseek;
-  } catch {
-    return MODEL_LIST.deepseek;
-  }
+  return fetchModelList({
+    url: "https://api.deepseek.com/v1/models",
+    headers: { Authorization: `Bearer ${apiKey}` },
+    fallback: MODEL_LIST.deepseek,
+    mapModels: (data) => data.data?.map((model) => model.id).sort()
+  });
 }
 async function fetchModelsForProvider(provider, apiKey, baseUrl, forceRefresh = false) {
   const cache = readCache();
@@ -86441,52 +86452,111 @@ function getCachedModels(provider) {
 }
 
 // src/commands/setup.ts
-var PROVIDER_DISPLAY_NAMES = {
-  ["openai" /* OPENAI */]: "OpenAI (GPT-4o, GPT-4)",
-  ["anthropic" /* ANTHROPIC */]: "Anthropic (Claude Sonnet, Opus)",
-  ["ollama" /* OLLAMA */]: "Ollama (Free, runs locally)",
-  ["llamacpp" /* LLAMACPP */]: "llama.cpp (Free, runs locally)",
-  ["gemini" /* GEMINI */]: "Google Gemini",
-  ["groq" /* GROQ */]: "Groq (Fast inference, free tier)",
-  ["mistral" /* MISTRAL */]: "Mistral AI",
-  ["deepseek" /* DEEPSEEK */]: "DeepSeek",
-  ["openrouter" /* OPENROUTER */]: "OpenRouter (Multiple providers)",
-  ["aimlapi" /* AIMLAPI */]: "AI/ML API",
-  ["azure" /* AZURE */]: "Azure OpenAI",
-  ["mlx" /* MLX */]: "MLX (Apple Silicon, local)"
-};
-var PRIMARY_PROVIDERS = [
-  "openai" /* OPENAI */,
-  "anthropic" /* ANTHROPIC */,
-  "ollama" /* OLLAMA */,
-  "llamacpp" /* LLAMACPP */
+var SETUP_PROVIDERS = [
+  {
+    provider: "openai" /* OPENAI */,
+    displayName: "OpenAI (GPT)",
+    selectionGroup: "primary",
+    firstRunRequirement: "apiKey"
+  },
+  {
+    provider: "anthropic" /* ANTHROPIC */,
+    displayName: "Anthropic (Claude Sonnet, Opus)",
+    selectionGroup: "primary",
+    firstRunRequirement: "apiKey"
+  },
+  {
+    provider: "ollama" /* OLLAMA */,
+    displayName: "Ollama (Free, runs locally)",
+    selectionGroup: "primary",
+    firstRunRequirement: "model"
+  },
+  {
+    provider: "llamacpp" /* LLAMACPP */,
+    displayName: "llama.cpp (Free, runs locally)",
+    selectionGroup: "primary",
+    firstRunRequirement: "model"
+  },
+  {
+    provider: "gemini" /* GEMINI */,
+    displayName: "Google Gemini",
+    selectionGroup: "other",
+    firstRunRequirement: "apiKey"
+  },
+  {
+    provider: "groq" /* GROQ */,
+    displayName: "Groq (Fast inference, free tier)",
+    selectionGroup: "other",
+    firstRunRequirement: "apiKey"
+  },
+  {
+    provider: "mistral" /* MISTRAL */,
+    displayName: "Mistral AI",
+    selectionGroup: "other",
+    firstRunRequirement: "apiKey"
+  },
+  {
+    provider: "deepseek" /* DEEPSEEK */,
+    displayName: "DeepSeek",
+    selectionGroup: "other",
+    firstRunRequirement: "apiKey"
+  },
+  {
+    provider: "openrouter" /* OPENROUTER */,
+    displayName: "OpenRouter (Multiple providers)",
+    selectionGroup: "other",
+    firstRunRequirement: "apiKey"
+  },
+  {
+    provider: "aimlapi" /* AIMLAPI */,
+    displayName: "AI/ML API",
+    selectionGroup: "other",
+    firstRunRequirement: "apiKey"
+  },
+  {
+    provider: "azure" /* AZURE */,
+    displayName: "Azure OpenAI",
+    selectionGroup: "other",
+    firstRunRequirement: "apiKey"
+  },
+  {
+    provider: "mlx" /* MLX */,
+    displayName: "MLX (Apple Silicon, local)",
+    selectionGroup: "other",
+    firstRunRequirement: "model"
+  },
+  {
+    provider: "flowise" /* FLOWISE */,
+    displayName: "flowise" /* FLOWISE */,
+    selectionGroup: "hidden",
+    firstRunRequirement: "apiKey"
+  },
+  {
+    provider: "test" /* TEST */,
+    displayName: "test" /* TEST */,
+    selectionGroup: "hidden",
+    firstRunRequirement: "none"
+  }
 ];
-var OTHER_PROVIDERS = [
-  "gemini" /* GEMINI */,
-  "groq" /* GROQ */,
-  "mistral" /* MISTRAL */,
-  "deepseek" /* DEEPSEEK */,
-  "openrouter" /* OPENROUTER */,
-  "aimlapi" /* AIMLAPI */,
-  "azure" /* AZURE */,
-  "mlx" /* MLX */
-];
-var NO_API_KEY_PROVIDERS = [
-  "ollama" /* OLLAMA */,
-  "llamacpp" /* LLAMACPP */,
-  "mlx" /* MLX */,
-  "test" /* TEST */
-];
-var MODEL_REQUIRED_PROVIDERS = [
-  "ollama" /* OLLAMA */,
-  "mlx" /* MLX */,
-  "llamacpp" /* LLAMACPP */
-];
-async function selectProvider() {
-  const primaryOptions = PRIMARY_PROVIDERS.map((provider) => ({
-    value: provider,
-    label: PROVIDER_DISPLAY_NAMES[provider] || provider
+function getProviderDefinition(provider) {
+  return SETUP_PROVIDERS.find((definition) => definition.provider === provider);
+}
+function getProviderOptions(group) {
+  return SETUP_PROVIDERS.filter(
+    (definition) => definition.selectionGroup === group
+  ).map((definition) => ({
+    value: definition.provider,
+    label: definition.displayName
   }));
+}
+function getProviderDisplayName(provider) {
+  return getProviderDefinition(provider)?.displayName || provider;
+}
+function getFirstRunRequirement(provider) {
+  return getProviderDefinition(provider)?.firstRunRequirement || "apiKey";
+}
+async function selectProvider() {
+  const primaryOptions = getProviderOptions("primary");
   primaryOptions.push({
     value: "other",
     label: "Other providers..."
@@ -86497,13 +86567,9 @@ async function selectProvider() {
   });
   if (hD2(selection)) return selection;
   if (selection === "other") {
-    const otherOptions = OTHER_PROVIDERS.map((provider) => ({
-      value: provider,
-      label: PROVIDER_DISPLAY_NAMES[provider] || provider
-    }));
     return await ee({
       message: "Select provider:",
-      options: otherOptions
+      options: getProviderOptions("other")
     });
   }
   return selection;
@@ -86539,7 +86605,7 @@ function formatCacheAge(timestamp) {
   return "just now";
 }
 async function selectModel(provider, apiKey) {
-  const providerDisplayName = PROVIDER_DISPLAY_NAMES[provider]?.split(" (")[0] || provider;
+  const providerDisplayName = getProviderDisplayName(provider).split(" (")[0] || provider;
   const loadingSpinner = le();
   loadingSpinner.start(`Fetching models from ${providerDisplayName}...`);
   let models = [];
@@ -86563,7 +86629,7 @@ async function selectModel(provider, apiKey) {
     loadingSpinner.stop("Models loaded");
   }
   if (models.length === 0) {
-    if (NO_API_KEY_PROVIDERS.includes(provider)) {
+    if (getFirstRunRequirement(provider) !== "apiKey") {
       return await J4({
         message: "Enter model name (e.g., llama3:8b, mistral):",
         placeholder: "llama3:8b",
@@ -86805,18 +86871,14 @@ function isFirstRun() {
   const hasGlobalConfig = getIsGlobalConfigFileExist();
   const config8 = getConfig();
   const provider = config8.OCO_AI_PROVIDER || "openai" /* OPENAI */;
-  if (provider === "test" /* TEST */) {
-    return false;
-  }
-  const hasRequiredConfig = MODEL_REQUIRED_PROVIDERS.includes(
-    provider
-  ) ? Boolean(config8.OCO_MODEL) : Boolean(config8.OCO_API_KEY);
+  const requirement = getFirstRunRequirement(provider);
+  const hasRequiredConfig = requirement === "model" ? Boolean(config8.OCO_MODEL) : requirement === "apiKey" ? Boolean(config8.OCO_API_KEY) : true;
   return !hasGlobalConfig && !hasRequiredConfig;
 }
 async function promptForMissingApiKey() {
   const config8 = getConfig();
   const provider = config8.OCO_AI_PROVIDER || "openai" /* OPENAI */;
-  if (NO_API_KEY_PROVIDERS.includes(provider)) {
+  if (getFirstRunRequirement(provider) !== "apiKey") {
     return true;
   }
   if (config8.OCO_API_KEY) {
@@ -87163,30 +87225,40 @@ var runMigrations = async () => {
   }
 };
 
+// src/utils/stripOcoFlags.ts
+var OCO_FLAG_SPECS = [
+  {
+    names: ["-c", "--context"],
+    consumesNextToken: true
+  },
+  {
+    names: ["-y", "--yes", "--fgm"],
+    consumesNextToken: false
+  }
+];
+function stripOcoFlags(argv) {
+  const forwardedArgs = [];
+  for (let index = 0; index < argv.length; index++) {
+    const argument = argv[index];
+    const exactFlag = OCO_FLAG_SPECS.find(
+      (spec) => spec.names.includes(argument)
+    );
+    if (exactFlag) {
+      if (exactFlag.consumesNextToken) index++;
+      continue;
+    }
+    const isEqualsForm = OCO_FLAG_SPECS.some(
+      (spec) => spec.names.some((name) => argument.startsWith(`${name}=`))
+    );
+    if (isEqualsForm) continue;
+    forwardedArgs.push(argument);
+  }
+  return forwardedArgs;
+}
+
 // src/cli.ts
 var config7 = getConfig();
 setupProxy(resolveProxy(config7.OCO_PROXY));
-var OCO_FLAGS_WITH_VALUE = /* @__PURE__ */ new Set(["-c", "--context"]);
-var OCO_BOOLEAN_FLAGS = /* @__PURE__ */ new Set(["-y", "--yes", "--fgm"]);
-var OCO_EQUALS_PREFIXES = ["-c=", "--context=", "-y=", "--yes=", "--fgm="];
-var stripOcoFlags = (argv) => {
-  const out = [];
-  for (let i3 = 0; i3 < argv.length; i3++) {
-    const a4 = argv[i3];
-    if (OCO_FLAGS_WITH_VALUE.has(a4)) {
-      i3++;
-      continue;
-    }
-    if (OCO_BOOLEAN_FLAGS.has(a4)) {
-      continue;
-    }
-    if (OCO_EQUALS_PREFIXES.some((prefix) => a4.startsWith(prefix))) {
-      continue;
-    }
-    out.push(a4);
-  }
-  return out;
-};
 var rawArgv = process.argv.slice(2);
 var extraArgs = stripOcoFlags(rawArgv);
 Z2(
