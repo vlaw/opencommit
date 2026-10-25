@@ -42,39 +42,7 @@ Keep temporary files in the system temp directory and delete yours afterward. Us
 
 Deploy only on request through the project's release tools. Follow its deployment guide. Stop for a dirty tree, unpublished source, or an unclear release commit.
 
-Release candidates stay local. Do not publish an RC to a public registry. Build the tarball and install it from the local file instead. Tag the release commit, push the tag, and keep the RC version in `package.json` so the local install reports the RC version.
-
-The machine keeps two opencommit channels. Each channel owns a separate npm prefix, because both packages claim the same bin names and one prefix would overwrite the other. The prefixes are the node installations, not dedicated directories.
-
-| Channel | npm prefix                          | Source          |
-| ------- | ----------------------------------- | --------------- |
-| RC      | `~/.asdf/installs/nodejs/<version>` | local tarball   |
-| Stable  | `/opt/homebrew`                     | public registry |
-
-The asdf node version changes when the toolchain changes, so the RC channel disappears on the next asdf upgrade. The homebrew prefix stays put across `brew upgrade node`, so the stable channel survives. That split is intentional: rebuild the RC after an asdf upgrade, and the stable channel needs no attention.
-
-Install the RC channel:
-
-```sh
-npm run build
-mkdir -p /tmp/oco-pack
-npm pack --pack-destination /tmp/oco-pack
-npm install -g /tmp/oco-pack/opencommit-<version>.tgz --registry=https://registry.npmjs.org/ --min-release-age=0
-```
-
-The asdf npm wrapper runs `asdf reshim` after a global install, so the shim appears in `~/.asdf/shims`.
-
-Install the stable channel:
-
-```sh
-/opt/homebrew/bin/npm install -g opencommit@latest --registry=https://registry.npmjs.org/ --min-release-age=0
-```
-
-Use the npmjs registry for the install. The user registry is a mirror, and the mirror refuses the tarball install. Disable `min-release-age` for the same reason. Keep the tarball in the system temp directory and delete it after the install.
-
-No `PATH` setup is needed. The zim asdf module puts `~/.asdf/shims` in `PATH`, and `.zprofile` puts `/opt/homebrew/bin` there. The profile file loads first, so the asdf shim directory comes first and the RC channel wins. Do not add launcher scripts and do not add opencommit entries to `PATH`.
-
-Verify the result with `which oco` and `which -a oco`. The first must print the asdf shim path. The second must list the asdf shim, then the homebrew path. Run `oco --version` and confirm it prints the RC version from `package.json`.
+Release candidates stay local. Do not publish an RC to a public registry. Build the tarball and install it from the local file instead. Follow `docs/rc-install.md`.
 
 ## Maintenance
 
