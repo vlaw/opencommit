@@ -1,4 +1,4 @@
-import { MODEL_LIST } from '../../src/commands/config';
+import { MODEL_LIST, RECOMMENDED_MODELS } from '../../src/commands/config';
 import {
   fetchAnthropicModels,
   fetchDeepSeekModels,
@@ -7,7 +7,8 @@ import {
   fetchMistralModels,
   fetchOllamaModels,
   fetchOpenAIModels,
-  fetchOpenRouterModels
+  fetchOpenRouterModels,
+  fetchOrcaRouterModels
 } from '../../src/utils/modelCache';
 
 const originalFetch = global.fetch;
@@ -76,9 +77,14 @@ describe('provider model fetchers', () => {
         }
       ],
       payload: {
-        data: [{ id: 'other-model' }, { id: 'claude-z' }, { id: 'claude-a' }]
+        data: [
+          { id: 'other-model' },
+          { id: 'claude-z' },
+          { id: 'claude-haiku-5-5' },
+          { id: 'claude-a' }
+        ]
       },
-      expected: ['claude-a', 'claude-z']
+      expected: ['claude-a', 'claude-haiku-5-5', 'claude-z']
     },
     {
       provider: 'Mistral',
@@ -126,6 +132,38 @@ describe('provider model fetchers', () => {
       ],
       payload: { data: [{ id: 'deepseek-z' }, { id: 'deepseek-a' }] },
       expected: ['deepseek-a', 'deepseek-z']
+    },
+    {
+      provider: 'OrcaRouter',
+      fetchModels: () => fetchOrcaRouterModels('orcarouter-key'),
+      request: [
+        'https://api.orcarouter.ai/v1/models',
+        { headers: { Authorization: 'Bearer orcarouter-key' } }
+      ],
+      payload: {
+        data: [
+          {
+            id: 'openai/gpt-5',
+            architecture: { output_modalities: ['text'] }
+          },
+          { id: 'orcarouter/auto' },
+          {
+            id: 'anthropic/claude-sonnet-4-5',
+            architecture: { output_modalities: ['text'] }
+          },
+          {
+            id: 'openai/gpt-image-1',
+            architecture: { output_modalities: ['image'] }
+          },
+          { id: 'orcarouter/fusion' }
+        ]
+      },
+      expected: [
+        'anthropic/claude-sonnet-4-5',
+        'openai/gpt-5',
+        'orcarouter/auto',
+        'orcarouter/fusion'
+      ]
     }
   ])(
     'preserves the $provider request and response mapping',
@@ -137,6 +175,36 @@ describe('provider model fetchers', () => {
     }
   );
 
+  it('keeps direct provider-prefixed OrcaRouter models selectable', async () => {
+    mockJsonResponse({
+      data: [
+        {
+          id: 'openai/gpt-5',
+          architecture: { output_modalities: ['text'] }
+        },
+        {
+          id: 'anthropic/claude-sonnet-4-5',
+          architecture: { output_modalities: ['text'] }
+        },
+        {
+          id: 'kling/kling-v3-omni',
+          architecture: { output_modalities: ['video'] }
+        },
+        {
+          id: 'openai/tts-1',
+          architecture: { output_modalities: ['audio'] }
+        },
+        { id: 'orcarouter/auto' }
+      ]
+    });
+
+    await expect(fetchOrcaRouterModels('orcarouter-key')).resolves.toEqual([
+      'anthropic/claude-sonnet-4-5',
+      'openai/gpt-5',
+      'orcarouter/auto'
+    ]);
+  });
+
   it.each([
     ['OpenAI', () => fetchOpenAIModels('key'), MODEL_LIST.openai],
     ['Ollama', () => fetchOllamaModels(), []],
@@ -145,7 +213,8 @@ describe('provider model fetchers', () => {
     ['Mistral', () => fetchMistralModels('key'), MODEL_LIST.mistral],
     ['Groq', () => fetchGroqModels('key'), MODEL_LIST.groq],
     ['OpenRouter', () => fetchOpenRouterModels('key'), MODEL_LIST.openrouter],
-    ['DeepSeek', () => fetchDeepSeekModels('key'), MODEL_LIST.deepseek]
+    ['DeepSeek', () => fetchDeepSeekModels('key'), MODEL_LIST.deepseek],
+    ['OrcaRouter', () => fetchOrcaRouterModels('key'), MODEL_LIST.orcarouter]
   ])(
     'returns the existing %s fallback for a non-OK response',
     async (_, fetchModels, fallback) => {
@@ -159,6 +228,16 @@ describe('provider model fetchers', () => {
     mockJsonResponse({ data: [{ id: 'whisper-1' }] });
 
     await expect(fetchOpenAIModels('key')).resolves.toEqual(MODEL_LIST.openai);
+  });
+
+  it('offers Haiku 5.5 offline without changing the Anthropic default', async () => {
+    mockJsonResponse({ data: [] }, false);
+
+    const models = await fetchAnthropicModels('key');
+
+    expect(models).toContain('claude-haiku-5-5');
+    expect(models[0]).toBe('claude-sonnet-4-6');
+    expect(RECOMMENDED_MODELS.anthropic).toBe('claude-sonnet-4-6');
   });
 
   it('returns an empty local fallback when mapping produces no models', async () => {

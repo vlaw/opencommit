@@ -13,6 +13,14 @@ export class OpenAiEngine implements AiEngine {
   config: OpenAiConfig;
   client: OpenAI;
 
+  /**
+   * Provider name used for error normalization. Subclasses that reuse the
+   * OpenAI-compatible transport (e.g. OrcaRouter) override this so errors
+   * are attributed to the right provider without re-implementing the
+   * request path.
+   */
+  protected providerName = 'openai';
+
   constructor(config: OpenAiConfig) {
     this.config = config;
 
@@ -51,13 +59,18 @@ export class OpenAiEngine implements AiEngine {
   public generateCommitMessage = async (
     messages: Array<OpenAI.Chat.Completions.ChatCompletionMessageParam>
   ): Promise<string | null> => {
-    const isReasoningModel = /^(o[1-9]|gpt-5)/.test(this.config.model);
+    const isReasoningModel =
+      typeof this.config.isReasoning === 'boolean'
+        ? this.config.isReasoning
+        : /^(o[1-9]|gpt-5)/.test(this.config.model);
+
+    const reasoningTokens = this.config.tokensMaxReasoning || 1000;
 
     const params = {
       model: this.config.model,
       messages,
       ...(isReasoningModel
-        ? { max_completion_tokens: this.config.maxTokensOutput }
+        ? { max_completion_tokens: reasoningTokens }
         : {
             temperature: 0,
             top_p: 0.1,
@@ -70,10 +83,13 @@ export class OpenAiEngine implements AiEngine {
         .map((msg) => tokenCount(msg.content as string) + 4)
         .reduce((a, b) => a + b, 0);
 
-      if (
-        REQUEST_TOKENS >
-        this.config.maxTokensInput - this.config.maxTokensOutput
-      )
+      const maxInputLimit = this.config.maxTokensInput;
+
+      const maxOutPutLimit = isReasoningModel
+        ? reasoningTokens
+        : this.config.maxTokensOutput;
+
+      if (REQUEST_TOKENS > maxInputLimit - maxOutPutLimit)
         throw new Error(GenerateCommitMessageErrorEnum.tooMuchTokens);
 
       const completion = await this.client.chat.completions.create(
@@ -84,7 +100,7 @@ export class OpenAiEngine implements AiEngine {
       let content = message?.content;
       return removeContentTags(content, 'think');
     } catch (error) {
-      throw normalizeEngineError(error, 'openai', this.config.model);
+      throw normalizeEngineError(error, this.providerName, this.config.model);
     }
   };
 }

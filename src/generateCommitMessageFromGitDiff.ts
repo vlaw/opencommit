@@ -29,10 +29,6 @@ import {
   tokenCountAsync
 } from './utils/tokenCount';
 
-const config = getConfig();
-const MAX_TOKENS_INPUT = config.OCO_TOKENS_MAX_INPUT;
-const MAX_TOKENS_OUTPUT = config.OCO_TOKENS_MAX_OUTPUT;
-
 const generateCommitMessageChatCompletionPrompt = async (
   diff: string,
   fullGitMojiSpec: boolean,
@@ -163,11 +159,26 @@ export const generateCommitMessageByDiff = async (
       (msg) => tokenCount(msg.content as string) + 4
     ).reduce((a, b) => a + b, 0);
 
+    const isReasoningModel =
+      typeof currentConfig.OCO_REASONING === 'boolean'
+        ? currentConfig.OCO_REASONING
+        : /^(o[1-9]|gpt-5)/.test(currentModel);
+
+    const maxInputTokens =
+      currentConfig.OCO_TOKENS_MAX_INPUT ??
+      DEFAULT_TOKEN_LIMITS.DEFAULT_MAX_TOKENS_INPUT;
+
+    const maxOutputTokens = isReasoningModel
+      ? currentConfig.OCO_REASONING_MAX_TOKENS ??
+        DEFAULT_TOKEN_LIMITS.DEFAULT_MAX_REASONING
+      : currentConfig.OCO_TOKENS_MAX_OUTPUT ??
+        DEFAULT_TOKEN_LIMITS.DEFAULT_MAX_TOKENS_OUTPUT;
+
     const MAX_REQUEST_TOKENS =
-      MAX_TOKENS_INPUT -
+      maxInputTokens -
       ADJUSTMENT_FACTOR -
       INIT_MESSAGES_PROMPT_LENGTH -
-      MAX_TOKENS_OUTPUT;
+      maxOutputTokens;
 
     if ((await tokenCountAsync(diff)) >= MAX_REQUEST_TOKENS) {
       const commitMessageTasks = await getCommitMessageTasksFromFileDiffs(
@@ -181,6 +192,15 @@ export const generateCommitMessageByDiff = async (
         commitMessageTasks,
         MAX_CONCURRENT_GENERATIONS
       );
+
+      // Keep one-line mode intact when a large diff is split into multiple
+      // requests by combining the subject from each generated message.
+      if (currentConfig.OCO_ONE_LINE_COMMIT) {
+        return commitMessages
+          .filter(Boolean)
+          .map((message) => message!.split('\n')[0].trim())
+          .join('; ');
+      }
 
       return commitMessages.join('\n\n');
     }

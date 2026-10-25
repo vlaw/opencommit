@@ -14,11 +14,11 @@ import { MLXEngine } from '../engine/mlx';
 import { DeepseekEngine } from '../engine/deepseek';
 import { AimlApiEngine } from '../engine/aimlapi';
 import { OpenRouterEngine } from '../engine/openrouter';
+import { OrcaRouterEngine } from '../engine/orcarouter';
 import { parseCustomHeaders } from './customHeaders';
 import { resolveProxy } from './proxy';
 
-export function getEngine(): AiEngine {
-  const config = getConfig();
+export function getEngine(config = getConfig()): AiEngine {
   const provider = config.OCO_AI_PROVIDER;
 
   const customHeaders = parseCustomHeaders(config.OCO_API_CUSTOM_HEADERS);
@@ -31,6 +31,8 @@ export function getEngine(): AiEngine {
     baseURL: config.OCO_API_URL!,
     proxy: resolvedProxy,
     apiKey: config.OCO_API_KEY!,
+    isReasoning: config.OCO_REASONING,
+    tokensMaxReasoning: config.OCO_REASONING_MAX_TOKENS,
     customHeaders
   };
 
@@ -76,6 +78,9 @@ export function getEngine(): AiEngine {
 
     case OCO_AI_PROVIDER_ENUM.OPENROUTER:
       return new OpenRouterEngine(DEFAULT_CONFIG);
+
+    case OCO_AI_PROVIDER_ENUM.ORCAROUTER:
+      return new OrcaRouterEngine(DEFAULT_CONFIG);
 
     default:
       return new OpenAiEngine(DEFAULT_CONFIG);
