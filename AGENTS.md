@@ -42,6 +42,20 @@ Keep temporary files in the system temp directory and delete yours afterward. Us
 
 Deploy only on request through the project's release tools. Follow its deployment guide. Stop for a dirty tree, unpublished source, or an unclear release commit.
 
+Release candidates stay local. Do not publish an RC to a public registry. Build the tarball and install it from the local file instead. Tag the release commit, push the tag, and keep the RC version in `package.json` so the local install reports the RC version.
+
+```sh
+npm run build
+mkdir -p /tmp/oco-pack
+npm pack --pack-destination /tmp/oco-pack
+npm install -g /tmp/oco-pack/opencommit-<version>.tgz --registry=https://registry.npmjs.org/ --min-release-age=0
+oco --version
+```
+
+Use the npmjs registry for the install. The user registry is a mirror, and the mirror refuses the tarball install. Disable `min-release-age` for the same reason. Keep the tarball in the system temp directory and delete it after the install.
+
+Verify the install with `oco --version`. It must print the RC version from `package.json`.
+
 ## Maintenance
 
 No slop. Write clear, declarative code. Prefer the smallest solution that meets the requirement and stays easy to read. Remove code your changes make unused.
